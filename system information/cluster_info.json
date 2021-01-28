@@ -1,0 +1,9 @@
+{
+  "cluster_locations": [
+    "C:\\work\\tagdata"
+ 
+  ],
+  "datasetLocation": "C:\\work\\newdataset",
+  "datasetLocation_old": "C:\\work\\tagdata",
+  "final_datasetLocation": "C:\\work\\finaldataset"
+}

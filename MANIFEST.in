@@ -1,0 +1,12 @@
+include .vscode/*
+include database/*
+include env/*
+include localmedia/*
+global-include systeminformation/*
+global-include systeminformation/Config/*
+global-include systeminformation/models/*
+lobal-include systeminformation/models/*/*
+include DB2.py
+include app.py
+include model.py
+include setup_dependency.py
