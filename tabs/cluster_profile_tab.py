@@ -143,9 +143,10 @@ class ClusterProfileTab(QWidget):
 
 	def tagSelctedImage(self):
 		self.tagPhotoButton.setEnabled(False)
-		imgname =self.getimgname()
+		imgname =self.imageLabel.text()
 		currentView, currentCluster = self.getCurrentClusterAndView()
 		curCluster = self.mainData[currentView][currentCluster]
+		filterName, view, params = self.filterInfo
 		tag = [item.text() for item in self.photoDropDown.selectedItems()][0]
 		if(self.filterInfo != None):
 			if(currentCluster not in self.filterClassDict):
@@ -156,6 +157,12 @@ class ClusterProfileTab(QWidget):
 				self.filterClassDict[currentCluster][tag] += 1
 		self.model.tag_image_trivial(curCluster.images[self.imgIndex], tag)
 		curCluster.removeImages(self.imgIndex)
+		#add image_name to DB
+
+		self.model.DB.modifyTable("""
+		INSERT INTO Image_tag VALUES(?,?,?)
+		""",(imgname, view,tag))
+		
 		if(curCluster.getClusterLen() == 0 and self.filterInfo != None):
 			#Add the tag information to DB
 			filterName, view, params = self.filterInfo
@@ -172,20 +179,6 @@ class ClusterProfileTab(QWidget):
 					  tag_alias=? AND
 					  tag_name=?""", (filterName, params, view, str(currentCluster), tags))
 				
-				result1 = self.model.DB.query("""
-				SELECT image_name, View, detail from Image_tag
-				WHERE image_name=? AND
-					  View=? AND
-					  detail=?
-				""",(str(imgname),view,tags)
-
-				)
-				if(result1 != []):
-					self.model.DB.modifyTable("""UPDATE Image_tag SET image_name=? AND
-					  View=? AND
-					  detail=?
-					
-					""",(str(imgname),view,tags))
 
 				if(result != []):
 					performance, ses_amt, detectedImage = result[0]
@@ -208,12 +201,7 @@ class ClusterProfileTab(QWidget):
 		# else:
 		# 	print("Moving images failed!")
 
-	def getimgname(self):
-		currentView, currentCluster = self.getCurrentClusterAndView()
-		curCluster = self.mainData[currentView][currentCluster]
-		self.imgIndex = (self.imgIndex + 1) % curCluster.imgAmt
-		currentImgPath = curCluster.images[self.imgIndex]
-		return self.imageLabel.setText(os.path.split(currentImgPath)[-1])
+
 		
 
 	def getCurrentClusterAndView(self):

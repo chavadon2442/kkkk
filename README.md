@@ -23,20 +23,24 @@ A system that automates the process of clustering & querying images as well as a
 
 ### Current progress
 
-![progress_2](https://user-images.githubusercontent.com/42161058/93670822-7285dc80-fac8-11ea-9ae5-0e5d00c50beb.gif)
+![progress-3](https://user-images.githubusercontent.com/42161058/93812590-0fd54200-fc7c-11ea-8e33-28fe72655abf.gif)
 
 ## Install
+This project relies on quite a lot of dependencies. If you are running this applicaiton using anaconda, you can use *setup_dependency.py* file to download all the required dependencies. 
 
-This module depends upon a knowledge of [PyQt5](https://pypi.org/project/PyQt5/). Once PyQt is installed in your system, simply run:
+```
+python ./setup_dependency.py
+```
+Once executed, you can:
+> * Create new environment with all the dependency.
+> * Choose the environment you want to download these dependencies in.
 
+All the dependencies are listed in *./env/environment.yml*
+
+Once all dependencies is installed in your system, simply run:
 ```
 python ./app.py
 ```
-Currently the only module required is PyQt, but future versions will include the following libraries:
-> * Matplotlib
-> * Numpy
-> * OpenCV (cv2)
-> * Keras
 
 ## Contributing
 

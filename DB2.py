@@ -66,7 +66,7 @@ class databaseManager:
 
         c.execute('''CREATE TABLE IF NOT EXISTS Image_tag   
         (
-        sesID INTEGER PRIMARY KEY AUTOINCREMENT, 
+        
         image_name TEXT,
         View TEXT,
         detail TEXT,

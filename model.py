@@ -1,31 +1,71 @@
-import os
+import os, shutil, string, glob
 import random
+import cv2
+from sklearn.cluster import MiniBatchKMeans
+from sklearn.metrics import classification_report
+from sklearn.utils import all_estimators
+import numpy as np
+import json
+from PyQt5 import Qt,QtCore, QtGui
+from clusterLogic.model import View_cluster
+from clusterLogic.PipeModules import Functions
+import time
+import subprocess
+from psutil import virtual_memory
+# from DB import AppDB
+from DB2 import databaseManager
+from sklearn.pipeline import Pipeline, make_pipeline
+import joblib 
+import inspect
+from sklearn.model_selection import train_test_split
+import copy
+import traceback
+
+class cluster:
+	def __init__(self):
+		self.paths = []
+		self.images = []
+		self.imgAmtRequired = 30
+	def addPath(self, path):
+		self.paths.append(path)
+	def addImages(self):
+		amtFromEach = self.imgAmtRequired//len(self.paths)
+		for path in self.paths:
+			imgs = os.listdir(path)
+			try:
+				self.images = self.images +  random.sample(imgs, amtFromEach)
+			except:
+				self.images = self.images + imgs
+			for i,localImgPath in enumerate(self.images):
+				self.images[i] = os.path.join(path, localImgPath)
+		self.imgAmt = len(self.images)
+
+	def removeImages(self, index):
+		self.images.pop(index)
+		self.imgAmt -= 1
+		if(len(self.images) < 1 and self.getClusterLen() > 0):
+			self.addImages()
+
+	def getClusterLen(self):
+		clusterLen = 0
+		for paths in self.paths:
+			clusterLen += len(os.listdir(paths))
+		return clusterLen
 
 
 class modelImage:
-<<<<<<< Updated upstream
-	def __init__(self):
-		self.clusters = []
-		self.clusterPath = None
-
-	def getClusterList(self, listLocation):
-=======
 	def __init__(self, DB):
 		self.storageLocation = "./systeminformation/"
 		self.configLocation = "./systeminformation/Config"
 		self.modelLocation = "./systeminformation/models"
 		self.DB = DB
 	def get_cluster_list(self, listLocation):
->>>>>>> Stashed changes
 		pass
-	def getClusterImages(self,clusterLocation, amount):
-		pass
-
-	def requestClusterImages(self, clusterLocation, amount="all"):
+	def request_cluster_images(self, clusterLocation, amount="all"):
 		imageDict = dict()
-		self.clusters = os.listdir(clusterLocation)
-		self.clusterPath = clusterLocation
-		for cluster in self.clusters:
+		clusters = os.listdir(clusterLocation)
+		self.storeInfo(clusterPath=clusterLocation,clusterList=clusters)
+		for cluster in clusters:
 			clusterImages = os.listdir(clusterLocation+"\\"+cluster)
 			clusterLen = len(clusterImages)
 			if(amount=="all"):
@@ -33,11 +73,8 @@ class modelImage:
 			imageDict[cluster] = [clusterLocation+"\\"+cluster+"\\"+clusterImages[random.randint(0,clusterLen-1)] for i in range(amount)]
 		return imageDict
 
-	def requestDissimilarImages(self, clusterName):
+	def request_dissimilar_images(self, clusterName):
 		#[ (imagelocation, percentageDissimilar), (imagelocation, percentageDissimilar), (imagelocation, percentageDissimilar)... ]
-<<<<<<< Updated upstream
-		pass
-=======
 		pass
 
 	def get_cluster_image(self,clusterName,amount=1):
@@ -491,4 +528,3 @@ if __name__ == "__main__":
 	returnv = modelClass.filterInfoCheck(imgLocal=r"D:\Documents\Capstone_Work\Testing_Sample_keras\Dummy", filtername="adarsh", paramname="DEFAULT_PARAMS.joblib", view="Bottom")
 	print(returnv)
 	#modelClass.filterInfoCheck("./", "adarsh", "adasa", "Bottom")
->>>>>>> Stashed changes
