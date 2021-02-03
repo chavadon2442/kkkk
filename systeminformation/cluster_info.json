@@ -1,8 +1,0 @@
-{
-  "cluster_locations": [
-    "C:\\Testdeploy\\test"
-  ],
-  "datasetLocation": "C:\\Testdeploy\\try",
-  "datasetLocation_old": "D:\\Documents\\Capstone_Work\\Testing_Sample_keras\\TagLocation",
-  "final_datasetLocation":  "C:\\Testdeploy\\Newdataset"
-}

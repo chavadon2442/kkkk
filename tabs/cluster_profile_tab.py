@@ -75,8 +75,6 @@ class ClusterProfileTab(QWidget):
 		#Photo info
 		self.tagButton = QPushButton("tag complete cluster")
 		self.tagPhotoButton = QPushButton("tag current image")
-		self.RecomButton = QLabel("Recommend Tags : Focus Tag")
-		#self.RecomButton.clicked.connect(self.recomTag)
 		self.tagButton.clicked.connect(self.tagCluster)
 		self.tagPhotoButton.clicked.connect(self.tagSelctedImage)
 		#self.tagButton.setEnabled(False)
@@ -84,23 +82,14 @@ class ClusterProfileTab(QWidget):
 		self.getNextPhotoButton = QPushButton("Next photo") 
 		self.photoInfoLayout.addWidget(self.getNextPhotoButton, 0,0,1,2)
 		self.photoDropDown = QListWidget()
-		self.photoDropDown1 = QListWidget()
 		#self.photoDropDown.setSelectionMode(QListWidget.MultiSelection)
 		self.photoInfoLayout.addWidget(self.photoDropDown, 1,0,1,2)
-		self.photoInfoLayout.addWidget(self.RecomButton, 2,0,1,2)
-		self.photoInfoLayout.addWidget(self.photoDropDown1, 3,0,1,2)
-		self.photoInfoLayout.addWidget(self.tagButton, 4,0,1,2)
-		self.photoInfoLayout.addWidget(self.tagPhotoButton, 5,0,1,2)
-		
+		self.photoInfoLayout.addWidget(self.tagButton, 2,0,1,2)
+		self.photoInfoLayout.addWidget(self.tagPhotoButton, 3,0,1,2)
 		tags  = self.model.DB.query_alltag()
 		for tg in tags:
 			self.photoDropDown.addItem(tg)
-			
-		tags1  = self.model.DB.query_alltag1()
-		for tg in tags1:
-			self.photoDropDown1.addItem(tg)
 		self.photoDropDown.setCurrentRow(0)
-		self.photoDropDown1.setCurrentRow(0)
 		self.photoInfoFrame.setLayout(self.photoInfoLayout)
 		##buttonsetup
 		self.getNextPhotoButton.clicked.connect(self.getPhoto)
@@ -143,10 +132,8 @@ class ClusterProfileTab(QWidget):
 
 	def tagSelctedImage(self):
 		self.tagPhotoButton.setEnabled(False)
-		imgname =self.imageLabel.text()
 		currentView, currentCluster = self.getCurrentClusterAndView()
 		curCluster = self.mainData[currentView][currentCluster]
-		filterName, view, params = self.filterInfo
 		tag = [item.text() for item in self.photoDropDown.selectedItems()][0]
 		if(self.filterInfo != None):
 			if(currentCluster not in self.filterClassDict):
@@ -157,12 +144,6 @@ class ClusterProfileTab(QWidget):
 				self.filterClassDict[currentCluster][tag] += 1
 		self.model.tag_image_trivial(curCluster.images[self.imgIndex], tag)
 		curCluster.removeImages(self.imgIndex)
-		#add image_name to DB
-
-		self.model.DB.modifyTable("""
-		INSERT INTO Image_tag VALUES(?,?,?)
-		""",(imgname, view,tag))
-		
 		if(curCluster.getClusterLen() == 0 and self.filterInfo != None):
 			#Add the tag information to DB
 			filterName, view, params = self.filterInfo
@@ -178,8 +159,6 @@ class ClusterProfileTab(QWidget):
 					  View=? AND
 					  tag_alias=? AND
 					  tag_name=?""", (filterName, params, view, str(currentCluster), tags))
-				
-
 				if(result != []):
 					performance, ses_amt, detectedImage = result[0]
 					newAvgPerformance = (performance*ses_amt + recallRate) / (ses_amt + 1)
@@ -200,9 +179,6 @@ class ClusterProfileTab(QWidget):
 		# 	self.getPhoto()
 		# else:
 		# 	print("Moving images failed!")
-
-
-		
 
 	def getCurrentClusterAndView(self):
 		return self.viewList.itemText(self.viewList.currentIndex()), self.clusterList.itemText(self.clusterList.currentIndex())

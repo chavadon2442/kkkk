@@ -4,6 +4,15 @@ from PyQt5 import Qt,QtCore, QtGui, QtWidgets
 import model
 from functools import partial
 import json
+import webbrowser
+import requests
+import win32api
+import threading
+import os
+from os import path
+import subprocess
+
+
 
 class IkkiewTab(QWidget):
 	def __init__(self,parent, threadpool, db):
@@ -12,18 +21,54 @@ class IkkiewTab(QWidget):
 		self.parent = parent
 		self.threadpool = threadpool
 		self.__UIsetup__()
+		
 
+		
+		
+	
+	
 	def __UIsetup__(self):
-		self.mainLayoutClusterList = QGridLayout()
+		f=open("version.txt","r")
 		#Set main layout
-		self.mainLayoutClusterList.addWidget(QLabel("Ikkiew"), 0,0)
-		self.mainLayoutClusterList.addWidget(QLabel("Balls"),1,0)
-		self.mainLayoutClusterList.addWidget(QPushButton("poposusu"),2,0)
-		self.mainLayoutClusterList.addWidget(QLabel("Lorem"),3,0)
-		self.mainLayoutClusterList.addWidget(QPushButton("Ipsum"),4,0)
-		self.setLayout(self.mainLayoutClusterList)
+		self.update = QPushButton("Check Update")
+		self.mainLayoutClusterList = QGridLayout()
+		self.updatefile=QLabel("")
+		self.updatebutton=QPushButton("Update now")
+		self.mainLayoutClusterList.addWidget(QLabel("Current Version"),0,0)
+		self.mainLayoutClusterList.addWidget(QLabel(str(f.read())), 0,1)
+		
+		self.mainLayoutClusterList.addWidget(self.update,2,0)
+		self.mainLayoutClusterList.addWidget(self.updatefile,3,0)
+		self.mainLayoutClusterList.addWidget(self.updatebutton,4,0)
+		self.update.clicked.connect(self.getupdate)
+		self.updatebutton.clicked.connect(self.updating)
+		self.updatebutton.setEnabled(False)
 
+		self.setLayout(self.mainLayoutClusterList)
+	def getupdate(self):
+		tr= ""
+		
+		check= str(path.exists("Human-assisted-taggingV1.0.exe"))
+		if check == str(False):
+			tr = "No Update"
+		else:
+			tr= "Update Avaliable"
+			self.updatebutton.setEnabled(True)
+		self.updatefile.setText(tr)
+		#C:\Users\ikkiw\Documents\Work\Human-assisted-tagging-finalWork\Human-assisted-taggingV1.0.exe
+	def updating(self):
+		 os.system(r"C:\Users\ikkiw\Documents\Work\Human-assisted-tagging-finalWork\Human-assisted-taggingV1.0.exe")
+		
 	def clear_layout(self, layout):
 	#Code reference [ https://www.semicolonworld.com/question/58072/clear-all-widgets-in-a-layout-in-pyqt ]
 		for i in reversed(range(layout.count())): 
 			layout.itemAt(i).widget().setParent(None)
+
+
+
+	
+	
+	
+	
+
+

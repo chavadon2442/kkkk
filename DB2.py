@@ -64,16 +64,6 @@ class databaseManager:
         PRIMARY KEY(filter_name, Params, View, tag_alias, tag_name)
         )''')
 
-        c.execute('''CREATE TABLE IF NOT EXISTS Image_tag   
-        (
-        
-        image_name TEXT,
-        View TEXT,
-        detail TEXT,
-        
-        FOREIGN KEY(View) REFERENCES Image_views(Views),
-        FOREIGN KEY(detail) REFERENCES DETAILS(Description)
-        )''')
         c.close()
 
     def addEntries(self):
@@ -127,7 +117,6 @@ class databaseManager:
             c.execute("INSERT into DETAILS values(39,'sprayed_or_painted')")
             c.execute("INSERT into DETAILS values(40,'termites')")
             c.execute("INSERT into DETAILS values(41,'wrong_label')")
-            
             self.conn.commit()
         except:
             pass
@@ -160,15 +149,6 @@ class databaseManager:
             query_alltags.append(row[1])
         c.close()
         return query_alltags
-    
-    def query_alltag1(self):
-        c = self.conn.cursor()
-        query_alltags1 = []
-        
-        for row in c.execute("SELECT tag_name FROM Filter_tag "):
-            query_alltags1.append(row[0])
-        c.close()
-        return query_alltags1
 
     def getAllFilter(self):
         c = self.conn.cursor()

@@ -10,6 +10,8 @@ import os
 import sys
 from DB2 import databaseManager
 
+
+
 class MainWindow(QWidget):
 	def __init__(self, width, height, title, pos = [0,0]):
 		super(MainWindow, self).__init__()
@@ -31,7 +33,7 @@ class MainWindow(QWidget):
 		#self.windowTab.addTab(self.clusterListTab, "Cluster location")
 		self.windowTab.addTab(self.clusterProfileTab, "Cluster profile")
 		self.windowTab.addTab(self.configTab, "Configuration")
-		self.windowTab.addTab(self.ikTab, "IkkiewTab")
+		self.windowTab.addTab(self.ikTab, "Update")
 		#self.windowTab.addTab(self.trainingTab, "Training")
 		self.mainLayout.addWidget(self.windowTab)
 		self.setLayout(self.mainLayout)

@@ -55,9 +55,9 @@ class cluster:
 
 class modelImage:
 	def __init__(self, DB):
-		self.storageLocation = "./systeminformation/"
-		self.configLocation = "./systeminformation/Config"
-		self.modelLocation = "./systeminformation/models"
+		self.storageLocation = "./system information/"
+		self.configLocation = "./system information/Config"
+		self.modelLocation = "./system information/models"
 		self.DB = DB
 	def get_cluster_list(self, listLocation):
 		pass
@@ -198,7 +198,7 @@ class modelImage:
 			return False
 	
 	def addClusterLocation(self, location):
-		with open("./systeminformation/cluster_info.json", "r+") as configData:
+		with open("./system information/cluster_info.json", "r+") as configData:
 			information = json.load(configData)
 			if(os.path.normcase(location) not in [os.path.normcase(pts) for pts in information["cluster_locations"]]):
 				information["cluster_locations"].append(location)
@@ -211,7 +211,7 @@ class modelImage:
 		print(mem.total)  # total physical memory available
 
 	def createNewConfig(self, name, mapVal):
-		configName = "./systeminformation/Config/{}.json".format(name)
+		configName = "./system information/Config/{}.json".format(name)
 		try:
 			with open(configName, "x") as newConfigFile:
 				json.dump(mapVal, newConfigFile)
@@ -319,7 +319,7 @@ class modelImage:
 		return True
 	
 	def tag_image_trivial(self, imgPath, tag):
-		with open("./systeminformation/cluster_info.json", "r") as configData:
+		with open("./system information/cluster_info.json", "r") as configData:
 			information = json.load(configData)
 			storageLocation = information["final_datasetLocation"]
 		imgName = os.path.split(imgPath)[-1]
@@ -356,7 +356,7 @@ class ClusteringThread(QtCore.QRunnable):
 		self.configFile = configFile
 		self.model = modelImage()
 		self.signals = threadSignals()
-		self.configLocation = "./systeminformation/Config" ###########EITHER STORE CONFIG LOCATION SOMEWHERE OR MAKE IT FIXED##########################
+		self.configLocation = "./system information/Config" ###########EITHER STORE CONFIG LOCATION SOMEWHERE OR MAKE IT FIXED##########################
 	@QtCore.pyqtSlot()
 	def run(self):
 		configFileName = os.path.join(self.configLocation,self.configFile) 
@@ -365,7 +365,7 @@ class ClusteringThread(QtCore.QRunnable):
 		all_views = [os.path.join(self.path,vw) for vw in os.listdir(self.path) if vw.find(".") == -1]
 		os.startfile(self.path) # Does not work on linux! 
 		self.model.addClusterLocation(self.path)
-		with open("./systeminformation/cluster_info.json", "r+") as configData:
+		with open("./system information/cluster_info.json", "r+") as configData:
 			information = json.load(configData)
 			if(os.path.normcase(self.path) not in [os.path.normcase(pts) for pts in information["cluster_locations"]]):
 				information["cluster_locations"].append(self.path)
