@@ -7,12 +7,19 @@ import json
 import webbrowser
 import requests
 import win32api
+import win32file
 import threading
 import os
 from os import path
 import subprocess
 
-
+path1= "Human-assisted-taggingV1.0.exe"
+hello= ""
+drive_list = win32api.GetLogicalDriveStrings()
+drive_list1 = drive_list.split("\x00")[0:-1]
+for letter in drive_list1:
+	if win32file.GetDriveType(letter) == win32file.DRIVE_REMOVABLE:
+		hello = ("{0}".format(letter)+path1)
 
 class IkkiewTab(QWidget):
 	def __init__(self,parent, threadpool, db):
@@ -48,7 +55,7 @@ class IkkiewTab(QWidget):
 	def getupdate(self):
 		tr= ""
 		
-		check= str(path.exists("Human-assisted-taggingV1.0.exe"))
+		check= str(path.exists(hello))
 		if check == str(False):
 			tr = "No Update"
 		else:
@@ -57,7 +64,7 @@ class IkkiewTab(QWidget):
 		self.updatefile.setText(tr)
 		#C:\Users\ikkiw\Documents\Work\Human-assisted-tagging-finalWork\Human-assisted-taggingV1.0.exe
 	def updating(self):
-		 os.system(r"C:\Users\ikkiw\Documents\Work\Human-assisted-tagging-finalWork\Human-assisted-taggingV1.0.exe")
+		 os.system(hello)
 		
 	def clear_layout(self, layout):
 	#Code reference [ https://www.semicolonworld.com/question/58072/clear-all-widgets-in-a-layout-in-pyqt ]
